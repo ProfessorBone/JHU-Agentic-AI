@@ -54,6 +54,12 @@ wheels/
 venv/
 env/
 ENV/
+agentic_ai_env/
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
 
 # IDE
 .vscode/
