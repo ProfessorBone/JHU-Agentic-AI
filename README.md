@@ -36,10 +36,16 @@ Agentic AI/
 │   ├── ext-Debugging the Code.ipynb
 │   ├── ext-Python Programming with Generative AI.pdf
 │   └── Bayes Rule example (2).xlsx
+├── Project One/                                    # 🆕 ACTIVE PROJECT
+│   ├── JHU_AgenticAI_Project_1_Learners_Notebook.ipynb
+│   ├── config.json
+│   ├── Project_1_DualLens_Analytics.md
+│   ├── Companies-AI-Initiatives.zip
+│   └── Guidelines - Converting IPYNB to HTML files.pdf
 ├── Prompt Engineering Foundations/
-│   └── Week 1/
-│       ├── MLS1_Shopping_Cart_Management.ipynb
-│       └── ext-Debugging the Code.ipynb
+│   ├── Week 1/
+│   ├── Week 2/
+│   └── Week 3/
 ├── Introduction to Agentic AI Design/
 └── Designing and Building Agentic Systems/
 ```
@@ -77,6 +83,55 @@ Agentic AI/
 - **Statistical Methods**: Bayesian approaches and probability
 
 ## 📊 Key Projects
+
+### 🚀 DualLens Analytics - AI-Driven Investment Analysis Platform (Project One) ⭐ **CURRENT PROJECT**
+
+An advanced agentic AI system that combines financial data analysis with AI initiative correlation for intelligent investment decision-making.
+
+**🎯 Project Status**: Phase 1 Complete - Financial Intelligence Engine ✅  
+**📈 Assignment Compliance**: All requirements fulfilled + enhanced features  
+
+#### **✅ Completed Phases:**
+
+**Phase 1: Financial Intelligence Engine**
+- ✅ **Stock Data Acquisition**: YFinance integration with 6+ years historical data
+- ✅ **Multi-Company Analysis**: NVDA, MSFT, GOOGL, AMZN, IBM portfolio
+- ✅ **Advanced Metrics**: Total returns, volatility, Sharpe ratios, max drawdowns
+- ✅ **Professional Visualization**: Risk-return analysis and price trend charts
+
+**Key Financial Results:**
+- **NVDA**: 5,499.4% total return (AI hardware leader)
+- **MSFT**: 453.7% total return (cloud computing dominance)  
+- **GOOGL**: 367.1% total return (search AI innovation)
+- **AMZN**: 192.7% total return (e-commerce evolution)
+- **IBM**: 254.6% total return (enterprise AI transformation)
+
+#### **🔄 Next Phases (Design Plan):**
+
+**Phase 2: AI Initiative Analysis Engine**
+- 📄 Document Processing: AI initiatives PDF analysis
+- 🔍 Text Mining: Extract AI strategy correlations
+- 📊 Correlation Analysis: Link AI investments to financial performance
+- 🤖 LLM Integration: GPT-4o powered insights generation
+
+**Phase 3: Graph-RAG Knowledge Architecture**
+- 🕸️ Knowledge Graph: Connect companies, AI initiatives, and performance
+- 🔗 Entity Relationships: Build comprehensive business intelligence network
+- 🧠 Advanced RAG: Retrieve and generate contextual investment insights
+- 📈 Predictive Analytics: Forecast trends based on AI initiative patterns
+
+**Phase 4: Agentic Decision System**
+- 🤖 Autonomous Agents: Investment recommendation engine
+- 📋 Portfolio Optimization: Risk-adjusted allocation strategies
+- 🔄 Continuous Learning: Adaptive market analysis
+- 📱 Interactive Interface: Real-time investment dashboard
+
+#### **🛠 Technical Architecture:**
+- **Data Layer**: YFinance API, PDF processing, structured databases
+- **AI Layer**: OpenAI GPT-4o, LangChain, sentence transformers
+- **Graph Layer**: NetworkX, graph databases, entity relationships
+- **Visualization Layer**: Matplotlib, Plotly, professional dashboards
+- **Agent Layer**: Autonomous decision-making and recommendation systems
 
 ### Shopping Cart Management System (Week 1)
 A simplified but intelligent shopping cart system for fruit sellers featuring:
@@ -135,8 +190,22 @@ A simplified but intelligent shopping cart system for fruit sellers featuring:
 
 ## 📈 Progress Tracking
 
+### Completed ✅
 - [x] **Pre Work**: Python Programming & Debugging
-- [x] **Week 1**: Shopping Cart Management System
+- [x] **Week 1**: Shopping Cart Management System  
+- [x] **Project One - Phase 1**: DualLens Analytics Financial Intelligence Engine
+  - [x] Stock data acquisition (YFinance integration)
+  - [x] Multi-company financial analysis (NVDA, MSFT, GOOGL, AMZN, IBM)
+  - [x] Advanced metrics calculation (returns, volatility, Sharpe ratios)
+  - [x] Professional data visualization and charts
+  - [x] Assignment requirements compliance + enhancements
+
+### In Progress 🚧
+- [x] **Project One - Phase 2**: AI Initiative Analysis Engine (Next)
+- [ ] **Project One - Phase 3**: Graph-RAG Knowledge Architecture  
+- [ ] **Project One - Phase 4**: Agentic Decision System
+
+### Upcoming 📅
 - [ ] **Introduction to Agentic AI Design**
 - [ ] **Designing and Building Agentic Systems**
 
@@ -165,5 +234,16 @@ This repository is for educational purposes as part of the Johns Hopkins Univers
 
 *"Translating knowledge into innovations that improve society"* - Johns Hopkins University Mission
 
-**Last Updated**: September 2025  
-**Status**: Active Learning 🚀
+## 🎯 Current Focus: DualLens Analytics Development
+
+**Phase 1 Complete** ✅: Financial Intelligence Engine with comprehensive stock analysis  
+**Phase 2 Starting** 🚧: AI Initiative Analysis Engine with document processing and correlation analysis  
+
+**Next Steps:**
+1. **Document Processing**: Analyze AI initiatives from company PDFs
+2. **Correlation Analysis**: Link AI investments to financial performance  
+3. **Graph-RAG Architecture**: Build knowledge graph for enhanced insights
+4. **Agentic Decision System**: Autonomous investment recommendation engine
+
+**Last Updated**: October 2025  
+**Status**: Active Development - DualLens Analytics 🚀
