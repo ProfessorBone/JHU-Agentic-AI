@@ -14,6 +14,43 @@ A step-by-step playbook for building AI agents in four tiers of increasing power
 
 ⸻
 
+## Agent Foundations: From Environment to Architecture
+
+**Concept Capsule:**
+Before we build an agent, we must understand *what world it lives in*. Every agentic system exists within an environment — defined by what it can sense, how it can act, and how success is measured.
+
+**Learning Objectives**
+• Define a PEAS model (Performance, Environment, Actuators, Sensors) for your agent.
+• Identify environment properties — deterministic/stochastic, episodic/sequential, static/dynamic, discrete/continuous.
+• Choose an appropriate agent architecture (Reflex, Model-Based, Goal-Based, Utility-Based, or Learning-Based).
+• Understand how the Model Context Protocol (MCP) connects agents to tools and data systems.
+
+**Steps**
+
+1. **Define PEAS** for your intended agent.
+   Example: For a Coding Agent —
+
+   * *Performance:* Functional, error-free code meeting spec
+   * *Environment:* Codebase, IDE, API endpoints
+   * *Actuators:* File editor, test runner, version control
+   * *Sensors:* Logs, test results, human feedback
+2. **Analyze the environment.**
+   Is it deterministic (fixed outcomes) or stochastic (uncertain outcomes)? Sequential (actions affect the future)? Dynamic (state changes over time)?
+3. **Select agent architecture** that fits your environment's complexity.
+
+   * Simple Reflex → Static or fully observable environments
+   * Model-Based Reflex → Dynamic but partially observable
+   * Goal-Based → Requires planning and reasoning
+   * Utility-Based → Requires evaluation of multiple good outcomes
+   * Learning Agent → Adapts with experience
+4. **Map tools and APIs** to the agent's *Actuators* and *Sensors*.
+5. **Build the environment interface** (tools, APIs, and memory stores) *before* writing the reasoning loop.
+
+**Reflection Prompt:**
+How does defining the environment (via PEAS) change how you think about tool design?
+
+⸻
+
 ## Tier 0 · Prereqs & Principles
 
 **Concept Capsule:**
@@ -54,6 +91,8 @@ The simplest agent can already act. It receives structured input, reasons about 
 
 **Steps**
 1. **Define role and goal** (e.g., Expense Assistant).
+1.5. **Define PEAS** for your agent.
+   Specify your agent's environment explicitly before coding. This ensures the tools and logic you build match its real operating context.
 2. **Design input/output schema** (Pydantic/JSON).
 3. **Write system prompt** with rules and tone.
 4. **Implement one tool** with strict type validation.
@@ -102,6 +141,8 @@ Build a domain-specific assistant that retrieves from embedded docs and summariz
 
 What is the key difference between RAG and long-term memory?
 
+How does defining an agent's environment (via PEAS) and linking it to tools (via MCP) increase both realism and reliability in your system?
+
 **Success Criteria:** 20% improvement on RAG-dependent accuracy; latency <2.5s p95.
 ⸻
 
@@ -124,6 +165,13 @@ When one mind isn't enough, agents must collaborate. The Planner–Researcher–
 5. **Separate RAG** (knowledge) from memory (episodes).
 6. **Introduce telemetry** and dashboards.
 7. **Set up CI/CD** and staging.
+8. **Integrate Tools via MCP**.
+   Integrate your tools via the **Model Context Protocol (MCP)**. MCP provides a standardized way for agents to discover and invoke external capabilities (APIs, databases, files, or other agents) securely.
+
+   **MCP Components:**
+   * **MCP Server:** Hosts and registers tools.
+   * **MCP Client:** The agent that queries tools dynamically.
+   * **Benefits:** Standardization, discoverability, scalability, and security.
 
 **Build Lab 3: Planner–Researcher–Critic Orchestration**
 
@@ -170,7 +218,16 @@ What ethical dilemmas could arise when an AI system governs itself?
 
 ## Appendices
 
-### Appendix A: Prompt, Schema & Tool Templates
+### Appendix A: PEAS Definition Template & Tool Templates
+
+**A0. PEAS Definition Template**
+
+| Component       | Description                | Example (Coding Agent)                 |
+| --------------- | -------------------------- | -------------------------------------- |
+| **Performance** | What success looks like    | Code runs without errors; passes tests |
+| **Environment** | Where the agent operates   | Local IDE, repo, test server           |
+| **Actuators**   | How it acts on the world   | File writer, terminal executor         |
+| **Sensors**     | How it perceives the world | Test output, logs, user feedback       |
 
 **A1. Compact System Prompt (fill-in)**
 ```
@@ -236,12 +293,35 @@ Follow the rules:
 
 ### Appendix D: Recommended Stack by Tier
 
+**MCP Layer (applies to Tier 3 and above)**
+The Model Context Protocol (MCP) connects your agents to real-world tools.
+
+* **MCP Server:** Hosts and registers your tools.
+* **MCP Client:** Your agent — it queries available tools dynamically.
+* **Benefits:** Standardization, discoverability, scalability, and security.
+
+**Example Stack:**
+FastMCP, Anthropic MCP SDK, OpenAI Functions, or CrewAI Connectors.
+
 **Tier 1**: FastAPI, Pydantic, OpenAI/Claude API, one tool, pytest, simple logs.
 **Tier 2**: + Chroma/Milvus/FAISS, LangChain/LlamaIndex, small memory store, Gradio/Streamlit.
-**Tier 3**: + Orchestrator (CrewAI/LangGraph/OpenAI Assistants + Tools), OpenTelemetry, Prometheus/Grafana, Docker, CI.
+**Tier 3**: + Orchestrator (CrewAI/LangGraph/OpenAI Assistants + Tools), OpenTelemetry, Prometheus/Grafana, Docker, CI, **+ MCP integration**.
 **Tier 4**: + Model gateway (router), policy engine (Constitution), multi-provider backends, feature store, auto-eval pipelines, SSO/RBAC, cost dashboards.
 
-### Appendix E: Learning Resources
+### Appendix E: Applied PEAS Example - Buddy Agent
+
+**Buddy Agent (Applied PEAS Snapshot)**
+
+| Element          | Description                                                    |
+| ---------------- | -------------------------------------------------------------- |
+| **Performance**  | Accurate trip logging, MPG calculation, FMCSA compliance       |
+| **Environment**  | Truck telemetry, Walmart dispatch data, GPS API, fuel receipts |
+| **Actuators**    | Log writer, route optimizer, compliance notifier               |
+| **Sensors**      | Odometer input, API data, driver notes                         |
+| **Architecture** | Model-based + goal-based agent with sequential decision-making |
+| **MCP Tools**    | TripLoggerTool, ComplianceCheckTool, FuelTrackerTool           |
+
+### Appendix F: Learning Resources
 
 **Key Frameworks**: LangChain, CrewAI, LlamaIndex, Guardrails, ReAct, AutoGen.
 **Essential Papers**: "ReAct: Synergizing Reasoning and Acting in LLMs" (Yao et al., 2023), "Reflexion" (Shinn et al., 2023), "RAG: Retrieval-Augmented Generation" (Lewis et al., 2020).

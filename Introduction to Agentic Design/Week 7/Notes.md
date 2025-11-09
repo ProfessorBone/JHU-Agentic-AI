@@ -268,6 +268,157 @@ meaning:
 
 ⸻
 
+## 🎯 PEAS Framework: Foundation for Agent Design
+
+The PEAS framework provides the essential foundation for understanding how to design any intelligent agent by breaking down the fundamental components that define an agent's interaction with its environment. Understanding PEAS is crucial because it establishes the groundwork for making informed decisions about agent architecture.
+
+### 🌟 Why PEAS Comes First
+
+Before we can choose an appropriate agent architecture (reflex, goal-based, utility-based, etc.), we must first understand:
+- What the agent needs to accomplish (Performance)
+- What world it operates in (Environment)
+- How it can affect that world (Actuators)
+- How it can perceive that world (Sensors)
+
+The PEAS analysis directly informs architectural choices. For example:
+- **Complex environments** → Need for model-based agents
+- **Multiple goals** → Utility-based architectures
+- **Real-time constraints** → Simple reflex agents
+- **Uncertain information** → Probabilistic reasoning
+
+### 📋 PEAS Components
+
+#### **P** - Performance Measure
+*How do we evaluate the agent's success?*
+
+**Key Questions:**
+- What constitutes good behavior?
+- How do we quantify success?
+- What are the trade-offs between different objectives?
+
+**Examples:**
+- **Autonomous Vehicle:** Safety (accidents avoided), efficiency (travel time), comfort (smooth ride), fuel economy
+- **Trading Bot:** Profit maximization, risk minimization, transaction costs
+- **Recommendation System:** User satisfaction, engagement time, click-through rates, diversity
+
+**Design Considerations:**
+- Must be **objective and measurable**
+- Should align with **stakeholder values**
+- May involve **multi-objective optimization**
+- Consider **short-term vs. long-term** performance
+
+#### **E** - Environment
+*What world does the agent operate in?*
+
+**Environmental Properties:**
+- **Observable vs. Partially Observable**
+- **Deterministic vs. Stochastic**
+- **Episodic vs. Sequential**
+- **Static vs. Dynamic**
+- **Discrete vs. Continuous**
+- **Single-agent vs. Multi-agent**
+
+**Examples:**
+- **Chess Game:** Fully observable, deterministic, sequential, static, discrete, multi-agent
+- **Autonomous Driving:** Partially observable, stochastic, sequential, dynamic, continuous, multi-agent
+- **Web Crawler:** Partially observable, stochastic, sequential, dynamic, discrete, single-agent
+
+#### **A** - Actuators
+*How can the agent act upon the environment?*
+
+**Key Considerations:**
+- What actions are available?
+- What are the constraints and limitations?
+- How do actions affect the environment?
+
+**Examples:**
+- **Robot:** Motors, grippers, speakers, displays
+- **Software Agent:** API calls, database writes, email sending, file operations
+- **Game AI:** Move commands, attack actions, resource allocation
+
+**Design Factors:**
+- **Bandwidth:** How many actions per time unit?
+- **Precision:** How exact can actions be?
+- **Latency:** Delay between decision and execution
+- **Reliability:** Probability of successful action execution
+
+#### **S** - Sensors
+*How can the agent perceive the environment?*
+
+**Types of Sensors:**
+- **Direct:** Camera, microphone, GPS, temperature sensors
+- **Indirect:** User feedback, system logs, performance metrics
+- **Internal:** Battery level, memory usage, processing load
+
+**Sensor Characteristics:**
+- **Range:** What can be sensed?
+- **Accuracy:** How precise are measurements?
+- **Noise:** How much uncertainty is introduced?
+- **Cost:** Computational or economic expense
+
+**Examples:**
+- **Medical Diagnosis AI:** Patient symptoms, test results, medical history, vital signs
+- **Smart Home:** Temperature sensors, motion detectors, time of day, user preferences
+- **Financial Trading:** Market prices, news sentiment, trading volumes, economic indicators
+
+### 🔄 PEAS Interaction Cycle
+
+```
+Environment State
+       ↓
+   [SENSORS] ← Perceive
+       ↓
+   Agent Processing
+   (Architecture-dependent)
+       ↓
+   [ACTUATORS] → Act
+       ↓
+Environment State Changes
+       ↓
+Performance Evaluation
+```
+
+### 📝 PEAS Analysis Example: Personal Assistant AI
+
+**Performance Measures:**
+- Task completion rate
+- User satisfaction scores
+- Response time
+- Privacy protection
+
+**Environment:**
+- Digital ecosystem (emails, calendars, contacts)
+- User preferences and habits
+- External services and APIs
+- Multi-user, dynamic, partially observable
+
+**Actuators:**
+- Send emails/messages
+- Schedule appointments
+- Make reservations
+- Provide recommendations
+- Control smart home devices
+
+**Sensors:**
+- Email content and metadata
+- Calendar information
+- User voice commands
+- Location data
+- Usage patterns
+- External data sources (weather, traffic)
+
+### 🎯 From PEAS to Architecture Choice
+
+The PEAS analysis directly guides architecture selection:
+
+1. **Simple Reflex** → When environment is fully observable and actions are deterministic
+2. **Model-Based Reflex** → When environment is partially observable but rules are clear
+3. **Goal-Based** → When multiple action sequences can achieve objectives
+4. **Utility-Based** → When trade-offs exist between competing objectives
+5. **Learning** → When environment is unknown or changing
+
+⸻
+
 ## 🧠 1. Transition: From Environment → Architecture
 
 Up to now, you've been studying the **external world**:
@@ -420,6 +571,488 @@ and it's the foundation for the next topics: *Goal-Based* and *Utility-Based* ag
 
 ⸻
 
-✅ Saving Tip for Faheem
-	•	Save this note as Week7_Episodic_Sequential_MDP.md inside Resources/Agentic_AI_Notes/ in Obsidian.
-	•	Tag it #AgenticAI #Week7 #MDP #Sequential.
+## 🧱 1. Recap: The Architectural Pyramid
+
+| Level     | Agent Type                   | Key Capability                                                                          |
+| :-------- | ---------------------------- | --------------------------------------------------------------------------------------- |
+| 🟣 Bottom | **Simple Reflex Agent**      | Reacts to current percept only                                                          |
+| 🔵 Next   | **Model-Based Reflex Agent** | Uses memory and a model of the world                                                    |
+| 🟢 Higher | **Goal-Based Agent**         | Chooses actions that achieve specific goals                                             |
+| 🟡 Top    | **Utility-Based Agent**      | Chooses actions that *maximize satisfaction or efficiency* among multiple good outcomes |
+
+Now we're entering the **"deliberative"** layers — agents that *think ahead* and *evaluate trade-offs*.
+
+---
+
+## 🎯 2. Goal-Based Agents
+
+### 💡 Definition
+
+A **Goal-Based Agent** doesn't just react; it **plans** actions to achieve one or more *desired outcomes (goals)*.
+
+It asks:
+
+> "What state of the world do I want to reach, and what sequence of actions will get me there?"
+
+---
+
+### 🧠 How It Works
+
+* Uses its **model of the environment** to simulate possible futures.
+* Compares future states to its **goal**.
+* Selects the action sequence that brings it *closer* to that goal.
+
+---
+
+### 🧩 Example
+
+* **Self-driving car:** "Reach destination safely and quickly."
+
+  * Checks map, predicts routes, adapts to traffic.
+* **Search algorithm (A*) or planner:** Finds path from current state → goal state.
+
+---
+
+### 💻 In Your Coding Agentic System
+
+A **Goal-Based Coding Agent** might have a goal like:
+
+> "Make the test suite pass"
+> "Implement a new API endpoint"
+> "Refactor module X without breaking compatibility"
+
+It would:
+
+1. Analyze the current project state.
+2. Plan the steps needed to achieve the goal (e.g., edit → test → debug → deploy).
+3. Execute and re-evaluate after each step.
+
+So, instead of "if error → fix," it *plans toward success.*
+
+---
+
+## 💰 3. Utility-Based Agents
+
+### 💡 Definition
+
+A **Utility-Based Agent** adds an extra layer of reasoning:
+
+> It doesn't just pick *any* goal-achieving plan — it picks the one that **maximizes utility**, meaning the *best possible outcome* according to a preference scale.
+
+---
+
+### ⚙️ Core Idea
+
+It introduces a **utility function** that measures:
+
+* **Performance quality** (speed, cost, accuracy, risk)
+* **Personal or system preferences**
+
+The agent now asks:
+
+> "Which plan gives me the *highest expected satisfaction*?"
+
+---
+
+### 🔍 Example
+
+* **Navigation:** Multiple routes reach the destination — choose the *safest* or *fastest*.
+* **Stock trading agent:** Buys assets not just for profit, but considering risk (risk-adjusted return).
+* **Language model:** Selects the most context-appropriate response, not just any valid one.
+
+---
+
+### 💻 In Your Coding Agentic System
+
+A **Utility-Based Coding Agent** could:
+
+* Evaluate multiple solutions:
+
+  * Fix bug quickly (*low accuracy, high speed*)
+  * Write comprehensive fix (*slower, higher reliability*)
+* Choose based on defined **utility metrics** like:
+
+  * `U = 0.7*accuracy + 0.2*efficiency + 0.1*readability`
+
+So now your agent can balance trade-offs automatically — optimizing not just for *completion*, but for *quality*.
+
+---
+
+## ⚖️ 4. Comparison Table
+
+| Property                 | **Goal-Based Agent**             | **Utility-Based Agent**                                |
+| ------------------------ | -------------------------------- | ------------------------------------------------------ |
+| **Drives behavior by**   | Specific goal or target          | Continuous measure of satisfaction                     |
+| **Decision style**       | Binary (achieved / not achieved) | Graded (better / worse)                                |
+| **Planning**             | Plans to reach the goal          | Plans to reach *best* outcome                          |
+| **Example**              | Reach a destination              | Reach the *fastest or safest* route                    |
+| **Coding Agent analogy** | "All tests pass"                 | "All tests pass *with minimal runtime and clean code*" |
+
+---
+
+## 🧭 5. Why This Matters
+
+These two architectures mark the shift from **reactive intelligence** to **deliberative intelligence** —
+from *doing what's right now* to *planning what's best next*.
+
+⸻
+
+## 🧠 1. Why "The Human Factor" Matters
+
+> "An agent doesn't operate in a vacuum — it often exists to help or interact with humans."
+
+So, a well-designed agent is **not only intelligent but also trustworthy and understandable** to the people it serves.
+
+Humans must:
+
+* **Trust** the agent's decisions.
+* **Understand** how and why it acts.
+* **Feel safe** depending on its output.
+
+Without this, even a perfectly logical AI can fail in real-world adoption.
+
+---
+
+## ⚙️ 2. The Three Human Factors in Agent Design
+
+### **1️⃣ Perceived Agency**
+
+This is how *human-like* the agent appears to be.
+
+Questions to consider:
+
+* Does the user believe the agent has intentions, knowledge, or emotions?
+* How does this perception affect user behavior?
+
+Example:
+
+> People often say "thank you" to Alexa — even though Alexa doesn't feel gratitude.
+> That's *perceived agency* — humans instinctively anthropomorphize.
+
+In design terms:
+
+* Too little perceived agency → users may ignore or distrust it.
+* Too much perceived agency → users may overtrust or misjudge it.
+
+---
+
+### **2️⃣ Trust**
+
+Trust is the **core of human-agent interaction**.
+
+We trust agents that show:
+
+* **Reliability** (consistent performance)
+* **Transparency** (clear reasoning)
+* **Competence** (ability to achieve goals)
+* **Alignment** (shared values with the user)
+
+If an agent breaks trust even once — for example, by giving a false answer or hiding its reasoning — users may disengage entirely.
+
+**Design Principle:**
+
+> "Trust must be earned through *predictability*, *honesty*, and *explainability*."
+
+---
+
+### **3️⃣ Human-Agent Interaction Principles**
+
+To foster trust and usability, AI agents should:
+
+| Principle            | Description                                         | Example                                               |
+| -------------------- | --------------------------------------------------- | ----------------------------------------------------- |
+| **Transparency**     | Show reasoning or confidence                        | "I chose this route because traffic is lighter here." |
+| **Feedback Loop**    | Let users give corrections                          | "Did this solve your problem?"                        |
+| **Explainability**   | Provide understandable answers, not black-box logic | "This code failed because variable X was undefined."  |
+| **Personalization**  | Adapt to user behavior and preferences              | Recommends code style based on your past commits      |
+| **Fail-Safe Design** | Admit uncertainty instead of acting recklessly      | "I'm not sure; would you like me to double-check?"    |
+
+---
+
+## 🧩 3. Trust and Explainability in *Agentic AI Systems*
+
+For your **Coding Agentic System (AQL project)**:
+
+| Trust Dimension    | How it applies                                                            |
+| ------------------ | ------------------------------------------------------------------------- |
+| **Reliability**    | Consistent code generation and testing results                            |
+| **Transparency**   | Explains why it made a specific code change                               |
+| **Competence**     | Understands the repo's architecture and dependencies                      |
+| **Alignment**      | Optimizes not just for "passing tests" but for *clean, maintainable code* |
+| **Explainability** | Clearly describes what each change does and why                           |
+
+So, your future "AQL_Heart" or "AQL_Admin" agents must not only act *intelligently* but also *communicate intelligibly.*
+
+---
+
+## 🧠 4. Psychological Insight
+
+Human trust in agents is *non-linear*:
+
+* A single success builds gradual trust.
+* A single failure can destroy it completely.
+
+That's why Explainable AI (XAI) and human-centered design are key research areas.
+
+In short:
+
+> People don't need a perfect AI — they need one they can understand and rely on.
+
+---
+
+## 🧭 5. Summary Table
+
+| Concept              | Meaning                                          | Goal in Agent Design                       |
+| -------------------- | ------------------------------------------------ | ------------------------------------------ |
+| **Perceived Agency** | How "human-like" the agent seems                 | Create comfort and engagement              |
+| **Trust**            | Confidence in agent's reliability and alignment  | Encourage continued use                    |
+| **Explainability**   | How clearly the agent communicates its reasoning | Make decisions transparent and accountable |
+
+⸻
+
+## 🧭 What Are Model Context Protocols (MCPs)?
+
+**Model Context Protocols (MCPs)** are like **"rules for intelligent conversation between AI models, humans, and tools."**
+
+They define *how* information is packaged, shared, and remembered — ensuring that multiple AI systems (or agents) can work together smoothly, even when they have different internal architectures.
+
+---
+
+## 🧩 1. Structured Methodology
+
+> "A set of rules and conventions for managing information sent to AI models."
+
+Think of MCPs as **standardized containers** for:
+
+* Context windows
+* Prompts
+* System instructions
+* Tools, APIs, or memories attached to a model
+
+This prevents chaos — so instead of sending random prompts, agents always speak the same "language."
+
+---
+
+## 🧠 2. Expert Briefing
+
+> "Like providing a comprehensive dossier to an expert before they tackle a task."
+
+MCPs ensure that before an agent acts, it receives **a consistent, complete context** — who it is, what it knows, and what the user wants.
+So instead of re-explaining everything each time, you can hand the model an **MCP file** that encapsulates its full situation.
+
+For example:
+
+```yaml
+role: Data Analyst
+goals:
+  - Clean and summarize sales data
+memory:
+  - Last query: "Summarize Q2 revenue by region"
+tools:
+  - pandas
+  - matplotlib
+```
+
+This "context bundle" can then be passed into any compatible model — GPT, Claude, or even your own local agent — and it will know how to continue the conversation intelligently.
+
+---
+
+## 🧱 3. Architectural Blueprint
+
+> "Transforms forgetful LLMs into coherent, consistent AI partners."
+
+LLMs normally have **short-term memory** — they forget everything once the chat ends.
+MCPs fix that by acting as an **architectural backbone**, allowing:
+
+* Persistent memory
+* Shared context between agents
+* Standardized state management
+
+That's how multiple agents (e.g., your *AQL_Tech*, *AQL_Scienta*, and *AQL_Heart*) could work in harmony — because they follow the same MCP "blueprint."
+
+---
+
+## 🧩 Analogy
+
+| Without MCP                                    | With MCP                                     |
+| ---------------------------------------------- | -------------------------------------------- |
+| Agents act independently, often forget context | Agents share structured context consistently |
+| Each model needs unique prompt formatting      | One unified protocol governs all             |
+| "Prompt chaos"                                 | "Context harmony"                            |
+
+---
+
+## 🧠 In Your AQL Ecosystem
+
+Your architecture already mirrors the MCP idea.
+
+* The **AQL_Tech** agent defines *technical context protocols*.
+* The **AQL_Scienta** and **AQL_Heart** modules use shared context and empathy layers.
+* Your **MCP layer** would be where these agents exchange structured "understanding packets."
+
+Think of MCPs as the **grammar of multi-agent intelligence** — the glue that makes your ecosystem coherent.
+
+⸻
+
+## 🧩 MCP vs. Traditional Tool Calling
+
+| **Feature**         | **Traditional Tool Calling**                                                                                                   | **Model Context Protocol (MCP)**                                                                          |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| **Standardization** | Proprietary and vendor-specific — each LLM provider (like OpenAI, Anthropic, etc.) defines its own way of connecting to tools. | Open, standardized protocol that enables interoperability — any LLM can talk to any MCP-compliant tool.   |
+| **Scope**           | Limited to executing *one predefined function* that's explicitly linked to that model.                                         | Broader — defines how *models and tools discover, connect, and communicate dynamically*.                  |
+| **Architecture**    | One-to-one connection between an LLM and a tool (like a plugin).                                                               | Client–server model — multiple LLM-powered clients can connect to MCP servers (which host tools or data). |
+| **Discovery**       | LLM must be explicitly told which tools exist in the session.                                                                  | MCP clients can **query servers** to discover what tools and capabilities are available on the fly.       |
+| **Reusability**     | Tool integrations are tightly coupled to one model or app.                                                                     | Tools become modular and reusable — any compliant client can access any MCP server.                       |
+
+---
+
+## 💡 In Other Words
+
+Traditional tool use (like "function calling" or "API chaining") is **static** — it's pre-wired between a specific model and tool.
+MCP turns that into a **dynamic ecosystem** where agents and tools can find and work with each other automatically, through shared context and rules.
+
+---
+
+## ⚙️ Example Analogy
+
+| **Old Way (Tool Calling)**                                                 | **New Way (MCP)**                                                                                                                            |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| You hardcode a Python function: `get_weather(city)` inside your GPT agent. | Your agent connects to a public "Weather MCP server," queries its capabilities, and dynamically uses the "get_weather" service if available. |
+
+It's like the difference between:
+
+* A **standalone app** with built-in tools, and
+* A **networked operating system** where any app can discover and use any other app's features.
+
+---
+
+## 🧠 Why This Matters for Agentic AI
+
+* It enables **multi-agent ecosystems** (like your *AQLAI_Nexus* framework) where different agents share a common language and infrastructure.
+* You can build tools once and reuse them everywhere.
+* It makes your AI system more **scalable, modular, and future-proof**.
+
+---
+
+So — in your terms:
+
+> 🔹 *Traditional tool calling* is like your AQL_Tech agent directly calling a local script.
+> 🔹 *MCP* is like your entire **AQLAI_Nexus** network having a universal tool API — so AQL_Tech, AQL_Scienta, and Buddy can all plug into the same "world" without custom wiring.
+
+---
+
+## 📊 Visual Architecture Diagrams
+
+### **Traditional Tool Calling (Static/Hardcoded)**
+
+```
+┌─────────────┐    direct function call    ┌─────────────┐
+│   LLM-A     │ ─────────────────────────→ │   Tool-1    │
+│  (OpenAI)   │                            │  (Weather)  │
+└─────────────┘                            └─────────────┘
+
+┌─────────────┐    direct function call    ┌─────────────┐
+│   LLM-B     │ ─────────────────────────→ │   Tool-2    │
+│ (Anthropic) │                            │ (Calendar)  │
+└─────────────┘                            └─────────────┘
+
+┌─────────────┐    direct function call    ┌─────────────┐
+│   LLM-C     │ ─────────────────────────→ │   Tool-3    │
+│  (Custom)   │                            │ (Database)  │
+└─────────────┘                            └─────────────┘
+```
+
+**Problems:**
+- ❌ Each LLM needs custom integration code
+- ❌ Tools can't be shared between models
+- ❌ No discovery mechanism
+- ❌ Vendor lock-in
+
+---
+
+### **MCP Architecture (Dynamic/Standardized)**
+
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   LLM-A     │    │   LLM-B     │    │   LLM-C     │
+│  (OpenAI)   │    │ (Anthropic) │    │  (Custom)   │
+│   Client    │    │   Client    │    │   Client    │
+└─────┬───────┘    └─────┬───────┘    └─────┬───────┘
+      │                  │                  │
+      └──────────────────┼──────────────────┘
+                         │
+                    ┌────┴────┐
+                    │   MCP   │ ← Universal Protocol Layer
+                    │Protocol │
+                    └────┬────┘
+                         │
+      ┌──────────────────┼──────────────────┐
+      │                  │                  │
+┌─────┴───────┐    ┌─────┴───────┐    ┌─────┴───────┐
+│MCP Server-1 │    │MCP Server-2 │    │MCP Server-3 │
+│ (Weather)   │    │ (Calendar)  │    │ (Database)  │
+│             │    │             │    │             │
+│ - Tool-A    │    │ - Tool-B    │    │ - Tool-C    │
+│ - Tool-D    │    │ - Tool-E    │    │ - Tool-F    │
+└─────────────┘    └─────────────┘    └─────────────┘
+```
+
+**Benefits:**
+- ✅ Any client can discover and use any server
+- ✅ Tools are modular and reusable
+- ✅ Standardized communication protocol
+- ✅ Platform-agnostic ecosystem
+
+---
+
+### **Your AQLAI_Nexus with MCP**
+
+```
+                    ┌─────────────────────────────┐
+                    │      AQLAI_Nexus Hub        │
+                    │     (MCP Orchestrator)      │
+                    └─────────────┬───────────────┘
+                                  │
+               ┌──────────────────┼──────────────────┐
+               │                  │                  │
+         ┌─────┴──────┐     ┌─────┴──────┐     ┌─────┴──────┐
+         │ AQL_Tech   │     │AQL_Scienta │     │ AQL_Heart  │
+         │  Agent     │     │   Agent    │     │   Agent    │
+         │ (Technical)│     │ (Research) │     │ (Empathy)  │
+         └─────┬──────┘     └─────┬──────┘     └─────┬──────┘
+               │                  │                  │
+               └──────────────────┼──────────────────┘
+                                  │
+                            ┌─────┴─────┐
+                            │    MCP    │
+                            │ Protocol  │
+                            └─────┬─────┘
+                                  │
+    ┌─────────────────────────────┼─────────────────────────────┐
+    │                             │                             │
+┌───┴────┐              ┌─────────┴─────────┐              ┌───┴────┐
+│Code    │              │   Knowledge       │              │Analytics│
+│Tools   │              │   Database        │              │Tools   │
+│Server  │              │   Server          │              │Server  │
+│        │              │                   │              │        │
+│-GitHub │              │ -Research Papers  │              │-Metrics│
+│-IDE    │              │ -Documentation    │              │-Charts │
+│-Deploy │              │ -Best Practices   │              │-Reports│
+└────────┘              └───────────────────┘              └────────┘
+```
+
+**Your Benefits:**
+- 🔹 **Universal Tool Access**: All three agents can use any tool
+- 🔹 **Shared Context**: Agents share memory through MCP servers
+- 🔹 **Modular Growth**: Add new agents or tools without rewiring
+- 🔹 **Consistent Interface**: Same protocol for all communications
+
+---
+
+## 🧭 Key Insight
+
+**Traditional approach** = Hard-wired connections (like old telephone switchboards)
+**MCP approach** = Internet-style networking (dynamic discovery and connection)
+
+This is why MCP enables true **multi-agent ecosystems** rather than just collections of independent tools!
+
