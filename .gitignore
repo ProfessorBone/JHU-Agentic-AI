@@ -61,6 +61,10 @@ agentic_ai_env/
 .env.local
 .env.*.local
 
+# Configuration files with API keys
+config.json
+**/config.json
+
 # IDE
 .vscode/
 .idea/
