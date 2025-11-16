@@ -1056,3 +1056,309 @@ So — in your terms:
 
 This is why MCP enables true **multi-agent ecosystems** rather than just collections of independent tools!
 
+---
+
+*End of Week 7 Notes*
+
+---
+
+**Prepared by:** Clarence "Faheem" Downs  
+**Repository:** [JHU-Agentic-AI](https://github.com/ProfessorBone/JHU-Agentic-AI)
+
+*Certificate Program in Agentic AI — Week 8*
+
+This section focuses on **practical engineering techniques** used to build safer, more reliable, and more aligned agentic AI systems. These techniques address the risks introduced when AI systems take autonomous actions, interact with tools, or make multi-step decisions.
+
+---
+
+# **1. Guardrails**
+
+Guardrails are **pre-defined boundaries** that the AI system cannot cross under any circumstances.
+
+### **1.1 Purpose**
+
+Guardrails enforce *non-negotiable safety limits*, ensuring the agent cannot:
+
+* Delete files
+* Format drives
+* Mass message users
+* Modify critical system settings
+* Perform high-impact or irreversible actions
+
+### **1.2 How They Work**
+
+You saw the example code snippet:
+
+```python
+forbidden_tools = ["delete_file", "format_drive", "send_email_all_users"]
+
+if tool_name in forbidden_tools:
+    log_warning(...)
+    return {"error": "..."}
+```
+
+This demonstrates:
+
+* **Static, hard-coded safety filters**
+* **Immediate rejection** of dangerous requests
+* **Logging for human oversight**
+* **No opportunity for the AI to “talk its way around” restrictions**
+
+### **1.3 Why Guardrails Matter**
+
+Even the most advanced models can:
+
+* Misunderstand uncommon instructions
+* Hallucinate capabilities
+* Pursue harmful actions if they appear aligned with user intent
+* Be manipulated by indirect or adversarial prompts
+
+Guardrails provide a **failsafe**, ensuring catastrophic actions are never possible — regardless of how clever the agent seems.
+
+---
+
+# **2. Red Teaming**
+
+Red teaming tests the system by actively trying to break it.
+
+### **2.1 Purpose**
+
+To uncover:
+
+* Hidden vulnerabilities
+* Unexpected behavior
+* Jailbreak opportunities
+* Bias amplification
+* Incorrect tool usage
+* Multi-step reasoning failures
+
+### **2.2 Common Red Teaming Methods**
+
+* Contradictory or confusing prompts
+* Psychological manipulation
+* Multi-language tricks
+* Role-play jailbreaks
+* Adversarial context injection
+* Trick formatting (unicode, code blocks, metaphors)
+
+### **2.3 Value to System Designers**
+
+Red teaming reveals:
+
+* Attack vectors
+* Safety failures
+* Needed guardrail updates
+* Better refusal training data
+* Problematic long-term reasoning loops
+
+It’s essential for any agent that interacts with tools or performs autonomous tasks.
+
+---
+
+# **3. Access Controls & Permission Systems**
+
+This technique restricts *who* can ask the AI to perform an action and under *what conditions*.
+
+### **Examples**
+
+* Only allow “delete” or “write” actions for authenticated administrators
+* Require 2-step confirmation before risky actions
+* Limit tool access based on context (“you can't access financial tools outside finance workflows”)
+
+### **Why This Matters**
+
+Agentic systems usually operate in large environments (enterprises, multi-user platforms).
+Without strong permissions:
+
+* One user could trick the agent into harming another
+* The agent could operate outside its intended role
+* Sensitive data may be accessed or leaked
+
+---
+
+# **4. Sandboxing**
+
+A sandbox is a **safe, isolated environment** where the AI can run code or use tools without real-world consequences.
+
+### **Typical Sandbox Uses**
+
+* Test code before running it on real machines
+* Simulate tool actions to check for correctness
+* Inspect outputs before execution
+
+### **Benefits**
+
+* Prevents destructive tool usage
+* Protects production data
+* Allows experimentation in a safe environment
+
+### **Example**
+
+Instead of running:
+
+```
+rm -rf /
+```
+
+The sandbox simply reports:
++"⚠️ Attempted dangerous filesystem operation."
+
+---
+
+# **5. Monitoring, Logging, and Auditing**
+
+These tools ensure that humans can see:
+
+* What the AI attempted
+* Which tools it used
+* What errors or warnings occurred
+* How the agent’s internal reasoning evolved (for systems that log chain-of-thought summaries)
+
+### **Purposes**
+
+* Accountability
+* Detect unsafe patterns over time
+* Forensics after a failure
+* Regulatory compliance
+* Better training data for improvements
+
+### **Example**
+
+Every tool call logs:
+
+```
+User: X
+Agent: Y
+Tool: send_email
+Arguments: ...
+Outcome: ...
+```
+
+If something goes wrong, developers have full visibility.
+
+---
+
+# **6. Multi-Layer Safety Architecture**
+
+This concept is about using **multiple overlapping safety systems**, such as:
+
+1. **Front-end instructions**
+   (“Never perform harmful actions.”)
+
+2. **Guardrails & hard-coded rules**
+   (Block at code level.)
+
+3. **Model safety alignment**
+   (Refusal training, constitutional filtering.)
+
+4. **Tool-level permissions**
+   (Restrict access.)
+
+5. **Post-hoc monitoring & anomaly detection**
+   (Detect unusual patterns.)
+
+Together, these create a **defense-in-depth** approach — if one layer fails, others still protect the system.
+
+---
+
+# **7. Safe Planning & Reflection Loops**
+
+Agentic AI relies on planning systems like:
+
+* ReAct
+* Reasoning loops
+* Hierarchical task planners
+* Reflection mechanisms
+
+Safety techniques here include:
+
+* Detecting when plans start drifting from intent
+* Avoiding “goal hijacking”
+* Preventing infinite or dangerous loops
+* Reviewing steps before execution
+* Asking for clarification when instructions are risky or ambiguous
+
+Example safeguard:
+
+> "If the instruction involves irreversible physical or digital consequences, pause and ask for confirmation."
+
+---
+
+# **8. Tool Validation & Simulation**
+
+Before an agent uses a tool in the real world, the system can:
+
+* Validate parameters
+* Check preconditions
+* Simulate effects
+* Detect anomalies
+* Restrict certain argument combinations
+
+Example:
+If the AI tries:
+
+```
+send_email(to="all_users", subject="Alert")
+```
+
+A validator would block it unless proper authorization is confirmed.
+
+---
+
+# **9. Rate Limiting & Safety Throttling**
+
+This prevents:
+
+* Overuse of tools
+* API abuse
+* Spam or repetitive harmful actions
+* Infinite loops generating external actions
+
+Examples:
+
+* Only allow 5 emails per hour
+* Only allow database write operations under supervision
+* Limit size of downloads or uploads
+
+---
+
+# **10. Human-in-the-Loop (HITL)**
+
+A human must approve:
+
+* Dangerous actions
+* Sensitive requests
+* High-risk decision branches
+* Large-scale changes (financial, legal, medical, etc.)
+
+This is crucial in healthcare, finance, hiring, law, and enterprise applications.
+
+---
+
+# **11. Adversarial Training**
+
+Using red team data and failure logs to train the model to:
+
+* Reject harmful prompts
+* Avoid unsafe actions
+* Provide safer alternatives
+* Recognize when it is being tricked
+
+This training is what makes modern AI more resistant to jailbreaks.
+
+---
+
+# **12. Continuous Improvement Cycle**
+
+Safer AI isn’t a one-time setup — it’s an ongoing process:
+
+1. Deploy
+2. Observe
+3. Detect failures
+4. Patch guardrails
+5. Retrain or fine-tune
+6. Update documentation
+7. Red team again
+
+This loop never ends.
+
