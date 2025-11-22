@@ -1025,7 +1025,456 @@ Domain architectural constraints improve reasoning *outside the LLM*.
 
 ---
 
-## **7. What's Coming Next in the Course**
+## **7. Tool Design Checklist for Reliable Agentic Systems**
+
+# ✅ **1. Clear Docstring**
+
+### What it means:
+
+* Every tool/function must clearly describe:
+
+  * what it does
+  * what inputs it expects
+  * what outputs it returns
+  * constraints or assumptions
+
+### Why it matters for agents:
+
+LLMs rely on the docstring to decide:
+
+* WHEN to call the tool
+* WHICH tool fits the task
+* HOW to format arguments
+
+### Example of bad vs good:
+
+❌ **Bad**
+
+```python
+def search(q): ...
+```
+
+✅ **Good**
+
+```python
+def search_products(query: str) -> list:
+    """
+    Searches the product catalog and returns a list of matching product names.
+    """
+```
+
+---
+
+# ✅ **2. Function-Calling Model**
+
+### What it means:
+
+* Tools should be designed so an LLM can call them
+* Structured arguments
+* Explicit parameter names
+* Typed inputs
+
+### Why it matters:
+
+Agents break when:
+
+* names are unclear
+* argument schemas don't match
+* inputs require human interpretation
+
+### Example:
+
+✅ Tools should use **keyword arguments**, not positional.
+
+---
+
+# ✅ **3. Robust Validation**
+
+### What it means:
+
+Before executing:
+
+* check input types
+* sanitize strings
+* verify ranges
+* reject malformed requests
+
+### Why it matters:
+
+Agents will:
+
+* send messy data
+* hallucinate parameters
+* mis-format values
+
+Your tool must defend itself.
+
+### Example:
+
+```python
+if not isinstance(amount, float) or amount < 0:
+    raise ValueError("amount must be a positive number")
+```
+
+---
+
+# ✅ **4. Exception Handling**
+
+### What it means:
+
+* Never allow a raw stack trace
+* Catch predictable failures
+* Return meaningful error messages
+
+### Why it matters:
+
+If exceptions leak:
+
+* the agent stops
+* the loop breaks
+* reasoning collapses
+
+Instead, tools should fail gracefully.
+
+### Example:
+
+```python
+try:
+    result = database_lookup(id)
+except DatabaseError:
+    return {"error": "Record not found"}
+```
+
+---
+
+# ✅ **5. Idempotent Design**
+
+### What it means:
+
+Running the same tool call multiple times should NOT:
+
+* duplicate effects
+* corrupt data
+* repeat destructive actions
+
+### Why it matters:
+
+Agents may:
+
+* retry a failed step
+* re-evaluate earlier reasoning
+* loop unintentionally
+
+Idempotence prevents disaster.
+
+### Example:
+
+✅ good:
+
+* setting a value
+* overwriting a file
+
+❌ bad:
+
+* charging a credit card
+* deleting records without checks
+
+---
+
+# ✅ **6. Confirmation Steps**
+
+### What it means:
+
+For any destructive or irreversible action:
+
+* add safety confirmation
+* require explicit acknowledgment
+
+### Why it matters:
+
+Agents sometimes misinterpret goals.
+
+Examples needing confirmation:
+
+* delete
+* modify
+* purchase
+* send messages
+* reconfigure systems
+
+### Sample pattern:
+
+```python
+def delete_user(user_id, confirm=False):
+    if not confirm:
+        return "This action will delete the user. Re-run with confirm=True"
+```
+
+---
+
+### ✅ Why this checklist appears in 9.05
+
+This slide bridges:
+
+✅ ReAct
+✅ tool-use
+✅ agent reliability
+✅ architectural safety
+
+You're being guided from:
+**"LLMs acting alone" → "LLMs acting through tools safely and predictably."**
+
+---
+
+### ✅ How this relates to Memory, Planning, and Agents
+
+Reliable tools support:
+
+* safe planning execution
+* state consistency
+* reversible behavior
+* failure recovery
+* macro-planning loops
+* LangGraph transitions
+* autonomous agents
+
+---
+
+## **8. Agent Evaluation Challenges**
+
+# ✅ Why Evaluation Is Hard for Agentic Systems
+
+Traditional software is easy to test because:
+
+* given the same input
+* it produces the same output
+  ➡️ deterministic, repeatable, predictable
+
+But agents built on LLMs are:
+
+### **1. Non-deterministic**
+
+* Same prompt can yield different outputs
+* Randomness, sampling temperature, and internal reasoning variance
+* Makes unit tests unreliable
+
+### **2. Behavior changes with each run**
+
+Because agents:
+
+* observe different states
+* retrieve different memories
+* explore different tool sequences
+* adapt reasoning dynamically
+
+### **3. Creativity breaks repeatability**
+
+Autonomy means:
+
+* the agent may try NEW strategies
+* even if old ones worked
+* which breaks regression testing
+
+### **4. No single right answer**
+
+For many tasks:
+
+✅ multiple valid answers exist
+✅ quality is subjective
+✅ correctness depends on context
+
+Example:
+"Generate a 3-step plan"
+→ many acceptable versions
+
+---
+
+# ✅ What Makes Agent Evaluation Different
+
+In agent systems we must evaluate:
+
+### ✅ The answer
+
+### ✅ The reasoning path
+
+### ✅ The tool usage
+
+### ✅ The ability to recover from failure
+
+### ✅ The ability to stop reasoning at the right time
+
+### ✅ The agent's alignment with constraints
+
+### ✅ The stability across multiple runs
+
+So evaluation is **multidimensional**, not binary.
+
+---
+
+# ✅ Key Evaluation Questions She Is Pointing Toward
+
+### **1. When is an answer "final"?**
+
+Meaning:
+
+* how do we know when to STOP the ReAct loop?
+
+Agents must determine:
+✅ confidence
+✅ completeness
+✅ task satisfaction
+
+This is extremely hard.
+
+---
+
+### **2. Did the agent reason effectively?**
+
+Even if output is correct…
+
+❌ hallucinated reasoning is a failure
+❌ unnecessary tool calls are a failure
+❌ circular thought loops are a failure
+
+This is why trace inspection matters.
+
+---
+
+### **3. Did the agent choose the right tools?**
+
+Agent evaluation must measure:
+
+* tool precision
+* tool efficiency
+* tool misuse
+* missing tool use when appropriate
+
+---
+
+### **4. Did the agent follow constraints?**
+
+Examples:
+
+* word limit
+* JSON schema
+* safe actions
+* domain policies
+
+Agents often fail here.
+
+---
+
+### **5. Did the agent maintain state?**
+
+This overlaps with:
+
+✅ short-term memory
+✅ long-term memory
+✅ episodic task progression
+
+Agents often forget:
+
+* goals
+* previous decisions
+* user instructions
+
+---
+
+# ✅ Methods Used to Evaluate Agents (Expanded)
+
+### **A. Human Evaluation**
+
+* gold standard
+* slow and expensive
+* subjective
+
+### **B. Automated Rubrics**
+
+Programmatic scoring of:
+
+* completeness
+* structure
+* formatting
+* coverage
+
+### **C. LLM-as-a-Judge**
+
+Another model evaluates response
+(but introduces bias)
+
+### **D. Replay and Trace Analysis**
+
+Very important for ReAct and LangGraph:
+
+* inspect reasoning steps
+* detect failure modes
+* compare runs
+
+### **E. Multi-Run Consistency Testing**
+
+Same input → many trials → variance scoring
+
+### **F. Task Success Rate**
+
+For agents that must achieve goals.
+
+### **G. Benchmark Datasets**
+
+Still emerging for agentic systems.
+
+---
+
+# ✅ New Evaluation Challenges Unique to Agents
+
+### **1. Emergent behavior**
+
+Agents may:
+
+* invent workflows
+* chain tools creatively
+* optimize in unintended ways
+
+### **2. Loops and dead ends**
+
+Stopping criteria unclear.
+
+### **3. Safety and boundary testing**
+
+Agents may:
+
+* attempt harmful operations
+* bypass constraints
+* take irreversible actions
+
+### **4. Deception / Sycophancy / Overconfidence**
+
+Evaluation must detect:
+
+* confident wrong answers
+* excessive praise
+* false self-validation
+
+---
+
+# ✅ Why the Course Introduces This Now
+
+This slide prepares you for:
+
+### ✅ 9.07 — ReAct vs Rigid Plan
+
+→ evaluation needed to compare methods
+
+### ✅ 9.08 — LangGraph
+
+→ graph execution enables traceable evaluation
+
+### ✅ 9.09 — Hands-on
+
+→ you will observe evaluation differences directly
+
+---
+
+## **9. What's Coming Next in the Course**
 
 This module sets up:
 
@@ -1033,6 +1482,216 @@ This module sets up:
 ✅ need for structured architectures
 ✅ motivation for LangGraph
 ✅ shift from prompting → system design
+
+---
+
+## **10. Memory Architecture and Memory Controllers**
+
+### ✅ The Three Types of Memory in Agents
+
+You already noticed this, and you're right:
+
+#### **Short-Term Memory**
+
+* lives inside the **context window**
+* automatically available to the LLM
+* limited capacity
+* holds **recent conversation / current task state**
+
+#### **Long-Term Memory**
+
+* external storage
+* e.g., vector DB, database, filesystem
+* persists across sessions
+* must be **retrieved intentionally**
+
+#### **Episodic Memory** (you correctly added)
+
+* stores **events**
+* includes timestamps, locations, agent state
+* enables:
+  ✅ personalization
+  ✅ continuity
+  ✅ learning from past behavior
+  ✅ reflection loops
+
+So far so good — but here's the problem:
+
+> **LLMs cannot manage these memory types on their own.**
+
+They don't know:
+
+* what should be stored
+* what should be retrieved
+* what should be forgotten
+* how to condense history
+* how to avoid context window overflow
+
+That's where the **memory controller** comes in.
+
+---
+
+### ✅ What is a Memory Controller?
+
+A **memory controller** is the component in an agent that:
+
+#### ✅ decides *what* gets stored
+
+#### ✅ decides *where* it should be stored
+
+#### ✅ decides *when* to retrieve memories
+
+#### ✅ decides *how* to summarize or compress them
+
+#### ✅ prevents overload and drift
+
+Think of it like:
+
+#### 🧠 The librarian of the agent's mind
+
+The LLM is NOT the memory — it only *uses* memory.
+
+The memory controller manages:
+
+| Task                | Example                                      |
+| ------------------- | -------------------------------------------- |
+| Storage             | Save user's preference: "Call me Faheem"     |
+| Retrieval           | When user returns tomorrow                   |
+| Relevance filtering | Ignore irrelevant previous content           |
+| Summarization       | Compress 200 messages into a 10-line summary |
+| Forgetting          | Remove stale or low-value entries            |
+| Prioritization      | Recent + emotionally weighted + repeated     |
+
+---
+
+### ✅ Why a Memory Controller Is Needed
+
+Without a controller:
+
+* context window fills up
+* cost increases
+* hallucinations increase
+* contradictions appear
+* agent loses continuity
+* planning breaks down
+
+With a controller:
+
+✅ stable identity
+✅ persistent goals
+✅ personal adaptation
+✅ long-horizon reasoning
+✅ efficient recall
+
+This is especially important as you move toward:
+
+#### **Macro-planning**
+
+#### **Multi-step execution**
+
+#### **Autonomous agents**
+
+---
+
+### ✅ How a Memory Controller Works (Mechanically)
+
+#### **Step 1 — Observe**
+
+Agent monitors interaction or environment.
+
+#### **Step 2 — Score**
+
+Each memory candidate is evaluated using signals such as:
+
+* relevance
+* novelty
+* emotional weight
+* user preference value
+* task importance
+* future usefulness likelihood
+
+#### **Step 3 — Store**
+
+Memory is written to one of:
+
+✅ episodic database
+✅ semantic knowledge store
+✅ vector embeddings
+✅ task history log
+
+#### **Step 4 — Retrieve**
+
+When needed, controller:
+
+* forms a query
+* fetches relevant memories
+* filters and ranks them
+* sends only the best into context
+
+#### **Step 5 — Compress / Summarize**
+
+To avoid bloat:
+
+* summarize conversation threads
+* consolidate repeated themes
+* retain meaning, drop clutter
+
+#### **Step 6 — Forget**
+
+Possible policies:
+
+* time decay
+* importance decay
+* replacement on saturation
+
+---
+
+### ✅ Simple Pseudocode Example
+
+```python
+def memory_controller(event):
+    score = relevance(event) + novelty(event) + emotional_weight(event)
+    
+    if score > storage_threshold:
+        store_in_long_term_memory(event)
+    
+    if needs_recall(event):
+        retrieved = query_memory(event.context)
+        return rank_by_similarity(retrieved)
+```
+
+This is the simplest form —
+real systems expand it into pipelines.
+
+---
+
+### ✅ Where This Fits in Agent Architecture (Module Connection)
+
+This lecture is transitioning you toward:
+
+#### ✅ agents that don't just react
+
+#### ✅ agents that *remember and plan*
+
+Memory controllers are required for:
+
+✅ ReAct + memory
+✅ Plan-and-execute
+✅ Hierarchical planners
+✅ LangGraph node state
+✅ Autonomous reasoning loops
+✅ Self-reflection agents
+
+---
+
+### ✅ Real-World Analogy
+
+Think of human cognition:
+
+* Working memory = what you're holding right now
+* Long-term memory = everything you've ever stored
+* Episodic memory = memories tied to life events
+* **Memory controller = your prefrontal cortex deciding what matters**
 
 ---
 
