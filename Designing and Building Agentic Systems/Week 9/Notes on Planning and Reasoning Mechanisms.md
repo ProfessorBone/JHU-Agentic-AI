@@ -768,6 +768,274 @@ The ReAct loop is the *heart* of your Buddy Dual-Agent architecture:
 
 ---
 
+---
+
+# **9.05: Agent Architectures and Optimization Techniques**
+
+## **1. Why Architecture Matters in Agentic Systems**
+
+Even though the ReAct loop provides reasoning + acting, it is **not enough** for full agent intelligence. Architecture determines:
+
+* how information flows
+* how decisions persist over time
+* how multi-step goals are coordinated
+* how external tools and memory are used
+* how the agent improves efficiency
+
+Architecture is the *mind structure* behind the loop.
+
+---
+
+## **2. Key Architectural Questions**
+
+The lecture introduces four core design questions:
+
+### **A. How do we structure the agent's beliefs?**
+
+Beliefs = the agent's internal representation of the world.
+
+#### **BDI Architecture: Belief-Desire-Intention Model**
+
+The classic agent architecture follows a **BDI (Belief-Desire-Intention)** model:
+
+```
+Perception (input from environment)
+           ↓
+       Beliefs ←─────────────────→ Desires
+(agent's knowledge              (long-term goals
+ and perception)                and motivations)
+           ↘                   ↙
+            →  Intentions  ←
+           (active plans
+          being pursued)
+                 ↓
+           Actions
+    (executed in environment)
+```
+
+**Key Components:**
+
+* **Beliefs** — What the agent knows about the world (current state, context, facts)
+* **Desires** — What the agent wants to achieve (goals, objectives, motivations)
+* **Intentions** — Active plans the agent commits to pursuing (chosen actions)
+* **Perception** → Updates beliefs based on environment
+* **Actions** → Modify the environment based on intentions
+
+This architecture separates:
+- **Knowledge** (beliefs)
+- **Goals** (desires)  
+- **Execution** (intentions/actions)
+
+Can be implemented as:
+
+✅ vector memories
+✅ knowledge bases (RAG)
+✅ symbolic state representations
+✅ key-value scratchpads
+✅ semantic graphs (LangGraph, GraphRAG)
+
+Important distinctions:
+
+* **Episodic memory** — what happened
+* **Semantic memory** — what is true
+* **Working memory** — what is relevant right now
+
+---
+
+### **B. How do we manage long-term goals?**
+
+Agents need more than next-step reasoning.
+
+Goal management approaches:
+
+**1. Hardcoded planners**
+
+* fixed sequence or state machine
+* predictable, reliable
+* low flexibility
+
+**2. LLM-driven planners**
+
+* LLM decides tasks dynamically
+* flexible, adaptive
+* harder to guarantee success
+
+**3. Hybrid planners (recommended)**
+
+* LLM proposes plan
+* deterministic system validates, orders, or constrains
+
+This is what the lecturer means when saying:
+
+> removing planning responsibility from the LLM
+
+Meaning: planning is handled structurally, not implicitly in prompts.
+
+---
+
+### **C. How do we implement memory?**
+
+Memory options compared:
+
+| Memory Type      | Pros               | Cons                   |
+| ---------------- | ------------------ | ---------------------- |
+| No memory        | simple             | easily forgets context |
+| Prompt-only      | lightweight        | expensive & brittle    |
+| Vector DB        | scalable recall    | requires embeddings    |
+| Tool + DB hybrid | strong performance | more complexity        |
+| Graph memory     | reasoning-friendly | still emerging         |
+
+Memory enables:
+
+✅ continuity
+✅ personal preference tracking
+✅ multi-step execution
+✅ retrieval efficiency optimization
+
+---
+
+### **D. How does the ReAct engine fit inside architecture?**
+
+ReAct becomes **only the inference core**, while architecture provides:
+
+* task routing
+* context assembly
+* memory retrieval
+* failure recovery
+* evaluation
+* tool orchestration
+
+So ReAct is **a component**, not the whole agent.
+
+---
+
+## **3. Optimization Techniques Introduced**
+
+The lecture briefly gestures toward optimization — here's the expanded detail.
+
+### **A. Prompt Optimization**
+
+* Few-shot vs zero-shot
+* Role prompting
+* Structured output formats
+* Reasoning scaffolds
+
+### **B. Latency Optimization**
+
+* caching model responses
+* reducing token windows
+* compressing memories
+* tool call minimization
+
+### **C. Search & Planning Optimization**
+
+* beam search reasoning
+* Monte-Carlo tree planning
+* high-level to low-level task decomposition
+
+### **D. Execution Optimization**
+
+* parallel tool calling
+* batching queries
+* hierarchical subagent routing
+
+---
+
+## **4. Architectural Blueprints (High-Level)**
+
+The lecture transitions toward previewing:
+
+### ✅ **Modular / Component-Based Architecture**
+
+* memory module
+* planner module
+* evaluator module
+* execution engine
+
+### ✅ **Hierarchical Agents**
+
+* manager agent
+* worker agents
+* verifier agent
+
+### ✅ **Graph-based Architectures (LangGraph)**
+
+* nodes = agent states
+* edges = transitions
+* supports loops, branching, retries
+
+These are meant to give **structure to the agent's mind**, not leave everything to the LLM.
+
+---
+
+## **5. Why Domain-Specific Architectures Help**
+
+This was the part that caused confusion — here's the intended meaning:
+
+### When you:
+
+✅ hardcode transitions
+✅ constrain allowed actions
+✅ encode domain rules
+✅ define success conditions
+
+…the agent doesn't need to **reason from scratch** every time.
+
+This:
+
+* improves reliability
+* reduces hallucinations
+* increases safety
+* lowers cost
+* makes debugging possible
+
+So adding structure is **not the same as Few-Shot CoT**.
+
+Few-Shot CoT improves reasoning *inside the LLM*.
+
+Domain architectural constraints improve reasoning *outside the LLM*.
+
+---
+
+## **6. Core Takeaways**
+
+### ✅ Cognitive architecture = how the agent thinks
+
+### ✅ ReAct is just the reasoning engine, not the architecture
+
+### ✅ Planning can be done by:
+
+* LLM (flexible but unreliable)
+* code (reliable but rigid)
+* hybrid (best of both)
+
+### ✅ Memory is essential for:
+
+* context retention
+* long-horizon tasks
+* personalization
+
+### ✅ Optimization occurs at multiple layers:
+
+* prompting
+* execution
+* planning
+* memory
+* architecture
+
+---
+
+## **7. What's Coming Next in the Course**
+
+This module sets up:
+
+✅ ReAct limitations
+✅ need for structured architectures
+✅ motivation for LangGraph
+✅ shift from prompting → system design
+
+---
+
 ## 🧠 Key Concepts
 
 ### Planning
